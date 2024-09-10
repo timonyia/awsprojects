@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document Upload</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 50px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            width: 400px;
+        }
+        input, textarea, button {
+            margin-bottom: 15px;
+            padding: 10px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Upload a Document</h1>
+
+    <form id="uploadForm">
+        <label for="documentName">Document Name:</label>
+        <input type="text" id="documentName" name="documentName" placeholder="Enter document name" required>
+
+        <label for="department">Department:</label>
+        <input type="text" id="department" name="department" placeholder="Enter department" required>
+
+        <label for="description">Description:</label>
+        <textarea id="description" name="description" placeholder="Enter a description" required></textarea>
+
+        <label for="file">Select File:</label>
+        <input type="file" id="file" name="file" multiple required>
+
+        <button type="submit">Upload</button>
+    </form>
+
+    <div id="result"></div>
+
+    <script>
+        const uploadForm = document.getElementById('uploadForm');
+        uploadForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const documentName = document.getElementById('documentName').value;
+            const department = document.getElementById('department').value;
+            const description = document.getElementById('description').value;
+            const fileInput = document.getElementById('file');
+            const files = fileInput.files;
+
+            const formData = new FormData();
+            formData.append('metadata', JSON.stringify({
+                documentName,
+                department,
+                description
+            }));
+
+            for (let i = 0; i < files.length; i++) {
+                formData.append('documents[]', files[i]);
+            }
+
+            fetch('https://your-api-gateway-url/upload', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('result').innerText = 'Upload Successful!';
+            })
+            .catch(error => {
+                document.getElementById('result').innerText = 'Error uploading files!';
+            });
+        });
+    </script>
+
+</body>
+</html>
