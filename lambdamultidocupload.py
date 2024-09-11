@@ -10,7 +10,6 @@ BUCKET_NAME = 'document-storage-bucket-unique-id'
 TABLE_NAME = 'DocumentMetadata'
 
 def lambda_handler(event, context):
-    # Parse input data
     data = json.loads(event['body'])
     documents = data['documents']  # List of documents
     metadata = data['metadata']    # Metadata entered by user
